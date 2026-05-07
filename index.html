@@ -2,25 +2,52 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suspect Juniors Vendors</title>
+    <title>Little Dot Thinking Vendors</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
-        .card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; }
-        .price { color: green; font-weight: bold; }
-        button { background: #3498db; color: white; border: none; padding: 10px; border-radius: 5px; width: 100%; }
+        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .promo-banner { background: #ffcc00; color: black; padding: 10px; font-weight: bold; border-radius: 10px; margin-bottom: 20px; }
+        .payment-box { background: #1e1e1e; border: 1px solid #bb86fc; padding: 15px; border-radius: 12px; margin-bottom: 25px; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #333; }
+        .price { font-size: 1.5em; color: #03dac6; font-weight: bold; }
+        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #333; color: white; }
+        .btn { background: #6200ee; color: white; padding: 15px; border-radius: 10px; text-decoration: none; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Our Services</h1>
-    
+
+    <div class="promo-banner">🔥 FAST MTN & AIRTELTIGO BUNDLES 🔥</div>
+
+    <h1>Little Dot Data</h1>
+    <div class="payment-box">
+        Pay MoMo to: <strong>0534337934</strong><br>
+        Name: <strong>Grace Doughan</strong>
+    </div>
+
     {% for item in items %}
     <div class="card">
-        <h3>{{ item.name }}</h3>
-        <p>{{ item.desc }}</p>
-        <p class="price">{{ item.price }}</p>
-        <button onclick="alert('Order sent to WhatsApp!')">Order Now</button>
+        <h2>{{ item.name }}</h2>
+        <div class="price">GHS {{ item.price }}</div>
+        <input type="number" id="phone-{{ loop.index }}" placeholder="Recipient Phone Number">
+        <a href="#" class="btn" onclick="buy('{{ item.name }}', {{ item.price }}, {{ loop.index }})">Order via WhatsApp</a>
     </div>
     {% endfor %}
+
+    <script>
+        function buy(name, price, id) {
+            var phone = document.getElementById('phone-' + id).value;
+            if (phone.length < 10) { alert("Enter a valid number!"); return; }
+
+            // Record sale to your Admin Dashboard
+            fetch('/record_sale', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name: name, price: price, phone: phone})
+            });
+
+            // Open WhatsApp
+            var text = "Hello! I paid GHS " + price + " to Grace Doughan.\nProduct: " + name + "\nFor: " + phone;
+            window.location.href = "https://wa.me/233534337934?text=" + encodeURIComponent(text);
+        }
+    </script>
 </body>
 </html>
